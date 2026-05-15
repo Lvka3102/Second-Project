@@ -88,14 +88,14 @@ body{padding:1rem;}
   <div class="sub">Insira os resultados oficiais da Lotofácil para detectar padrões e prever os números mais prováveis do próximo sorteio.</div>
 
   <div class="mirror-block">
-    <div class="mirror-sub">Cole os 15 números de um concurso real, separados por espaço ou vírgula.</div>
+    <div class="mirror-sub">Cole os 10 números de um concurso real, separados por espaço ou vírgula.</div>
     <div class="mirror-row">
       <span class="mirror-label">Concurso nº</span>
       <input class="mirror-input" id="inp-concurso" type="text" placeholder="ex: 3142" style="max-width:130px">
     </div>
     <div class="mirror-row">
       <span class="mirror-label">Números</span>
-      <input class="mirror-input" id="inp-nums" type="text" placeholder="ex: 01 03 07 09 11 13 14 16 18 20 21 22 23 24 25">
+      <input class="mirror-input" id="inp-nums" type="text" placeholder="ex: 01 03 07 09 11 13 14 16 18 20">
     </div>
     <div class="mirror-actions">
       <button class="btn-sm btn-add" onclick="addMirror()"><i class="ti ti-plus" aria-hidden="true" style="font-size:14px;vertical-align:-2px;margin-right:4px"></i>Adicionar concurso</button>
@@ -119,9 +119,9 @@ function addMirror(){
   const ni=document.getElementById('inp-nums').value.trim();
   if(!ni){alert('Insira os números do concurso.');return;}
   const nums=parseNums(ni);
-  if(nums.length!==15){alert(`São necessários exatamente 15 números válidos (1–25). Você inseriu ${nums.length}.`);return;}
+  if(nums.length!==10){alert(`São necessários exatamente 10 números válidos (1–25). Você inseriu ${nums.length}.`);return;}
   const unique=[...new Set(nums)];
-  if(unique.length!==15){alert('Os números não podem se repetir.');return;}
+  if(unique.length!==10){alert('Os números não podem se repetir.');return;}
   mirrorData.push({concurso:ci||`Concurso ${mirrorData.length+1}`,nums:unique.sort((a,b)=>a-b)});
   document.getElementById('inp-concurso').value='';
   document.getElementById('inp-nums').value='';
@@ -206,7 +206,7 @@ function renderAnalysis(){
     weightedFreq[n]=score;
   }
 
-  const predicted=Object.entries(weightedFreq).sort((a,b)=>b[1]-a[1]).slice(0,15).map(x=>+x[0]).sort((a,b)=>a-b);
+  const predicted=Object.entries(weightedFreq).sort((a,b)=>b[1]-a[1]).slice(0,10).map(x=>+x[0]).sort((a,b)=>a-b);
   const topPred=Object.entries(weightedFreq).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>+x[0]);
 
   el.innerHTML=`
@@ -251,3 +251,4 @@ function renderAnalysis(){
   });
 }
 </script>
+
