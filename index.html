@@ -1,4 +1,3 @@
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
@@ -85,7 +84,7 @@ body{padding:1rem;}
   <h2 class="sr-only">Espelho de sorteios reais da Lotofácil com análise de padrões</h2>
   <div class="logo">Lotofácil · Espelho</div>
   <div class="title">Sorteios reais</div>
-  <div class="sub">Insira os resultados oficiais da Lotofácil para detectar padrões e prever os números mais prováveis do próximo sorteio.</div>
+  <div class="sub">Insira os resultados oficiais da Lotofácil para detectar padrões e identificar os 10 números mais improváveis do próximo sorteio.</div>
 
   <div class="mirror-block">
     <div class="mirror-sub">Cole os 10 números de um concurso real, separados por espaço ou vírgula.</div>
@@ -199,10 +198,10 @@ function renderAnalysis(){
     let score=0;
     mirrorData.forEach((m,idx)=>{
       const recency=(idx+1)/mDraws;
-      if(m.nums.includes(n))score+=recency;
+      if(!m.nums.includes(n))score+=recency;
     });
-    const absent=mirrorData.filter(m=>!m.nums.includes(n)).length;
-    score+=absent*0.12;
+    const present=mirrorData.filter(m=>m.nums.includes(n)).length;
+    score+=present*0.12;
     weightedFreq[n]=score;
   }
 
@@ -212,7 +211,7 @@ function renderAnalysis(){
   el.innerHTML=`
     <div class="analysis-block">
       <div class="an-title">Análise de padrão</div>
-      <div class="an-sub">Baseado em ${mDraws} concurso${mDraws>1?'s':''} inserido${mDraws>1?'s':''}. Números em laranja têm maior probabilidade preditiva.</div>
+      <div class="an-sub">Baseado em ${mDraws} concurso${mDraws>1?'s':''} inserido${mDraws>1?'s':''}. Números em laranja são os mais improváveis de serem sorteados.</div>
 
       <div class="an-section">
         <div class="an-label">Frequência por número</div>
@@ -230,7 +229,7 @@ function renderAnalysis(){
       </div>
 
       <div class="an-section">
-        <div class="an-label">Previsão — próximo sorteio</div>
+        <div class="an-label">Números mais improváveis — próximo sorteio</div>
         <div class="prediction-balls" id="pred-balls">
           ${predicted.map((n,i)=>`<div class="pred-ball ${topPred.includes(n)?'top':''}" id="pb${i}" style="transition-delay:${i*40}ms">${String(n).padStart(2,'0')}</div>`).join('')}
         </div>
@@ -238,8 +237,8 @@ function renderAnalysis(){
 
       <div class="an-section">
         <div class="an-label">Insights</div>
+        <div class="insight"><b>Mais improváveis:</b> ${predicted.slice(0,5).map(n=>String(n).padStart(2,'0')).join(', ')} — ausentes ou muito raros no histórico.</div>
         <div class="insight"><b>Mais frequentes:</b> ${top5.map(n=>String(n).padStart(2,'0')).join(', ')} — presentes em mais de ${Math.round(mf[top5[0]]/mDraws*100)}% dos concursos.</div>
-        <div class="insight"><b>Menos sorteados:</b> ${bot5.map(n=>String(n).padStart(2,'0')).join(', ')} — candidatos por atraso acumulado.</div>
         ${repeats.length>0?`<div class="insight"><b>Persistência recente:</b> ${repeats.map(n=>String(n).padStart(2,'0')).join(', ')} apareceram nos 2 últimos concursos.</div>`:''}
         ${consecutive.length>0?`<div class="insight"><b>Par consecutivo frequente:</b> ${consecutive[0].pair} — apareceu junto em ${consecutive[0].cnt} concursos.</div>`:''}
         ${never.length>0?`<div class="insight"><b>Ausentes no período:</b> ${never.map(n=>String(n).padStart(2,'0')).join(', ')} — nunca sorteados nos concursos inseridos.</div>`:''}
@@ -251,4 +250,3 @@ function renderAnalysis(){
   });
 }
 </script>
-
